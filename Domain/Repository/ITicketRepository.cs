@@ -13,5 +13,7 @@ namespace Models.Repository
         void UpdateStatus(TicketInRooms model);
         void CopyToNextRoom(int ticketId);
         StatusEnum GetStatus(int id);
+
+        TicketInRooms GetTicketInRoomById(int id);
     }
 }

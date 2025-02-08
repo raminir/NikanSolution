@@ -1,4 +1,5 @@
-﻿using Application.ViewModels;
+﻿using Application.Services;
+using Application.ViewModels;
 using Models;
 using Models.Repository;
 using System;
@@ -13,10 +14,12 @@ namespace Application
         {
             private readonly ITicketRepository _ticketRepository;
             private readonly IDepartmentRepository _departmentRepository;
-            public TicketService(ITicketRepository ticketRepository, IDepartmentRepository departmentRepository)
+            private readonly AppointmentService _appointmentService;
+            public TicketService(ITicketRepository ticketRepository, IDepartmentRepository departmentRepository, AppointmentService appointmentService)
             {
                 _ticketRepository = ticketRepository;
                 _departmentRepository = departmentRepository;
+                _appointmentService = appointmentService;
             }
             public int GetNextTicketNumber(DateTime date, int departmentId)
             {
@@ -28,7 +31,7 @@ namespace Application
             {
                 var department = _departmentRepository.GetById(departmentId);
                 var firstRoomId = department.Rooms.FirstOrDefault().Id;
-                int newTicketNumber = GetNextTicketNumber(DateTime.Now.Date,departmentId);
+                int newTicketNumber = GetNextTicketNumber(DateTime.Now.Date, departmentId);
 
                 var ticket = new Ticket
                 {
@@ -61,7 +64,7 @@ namespace Application
             {
                 return _ticketRepository.GetTodayTicketsForBoard();
             }
-            
+
             public void UpdateTicketToDone(int id, TicketUpdateViewModel input)
             {
                 UpdateStatus(id, input);
@@ -81,10 +84,19 @@ namespace Application
                     Id = id,
                     StatusId = input.StatusId,
                 };
-
                 _ticketRepository.UpdateStatus(model);
+                if (model.StatusId == StatusEnum.InProgress)
+                {
+                    SendModelToHub(model.Id);
+                }
             }
 
+            public void SendModelToHub(int TicketInRoomId)
+            {
+                var ticketInRooms = _ticketRepository.GetTicketInRoomById(TicketInRoomId);
+                _appointmentService.CallAppointment(new TicketInRoomViewModel() { RoomName = ticketInRooms.Room.Name, TicketNumber = ticketInRooms.Ticket.TicketNumber });
+
+            }
         }
     }
 }

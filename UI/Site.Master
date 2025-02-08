@@ -47,7 +47,6 @@
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/RoomDetail">تمام نوبت ها</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Board">نمایشگر</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Departments">دپارتمان ها</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Rooms">بخش ها</a></li>
 
@@ -68,6 +67,26 @@
     </form>
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/Scripts/bootstrap.js") %>
+        <%: Scripts.Render("~/Scripts/jquery.signalR-2.4.3.min.js") %>
+        <%: Scripts.Render("~/signalr/hubs") %>
+        <script>
+            $(function () {
+                var notificationHub = $.connection.notificationHub;
+
+                notificationHub.client.broadcastNewAppointment = function (appointment) {
+                    $('#appointments').prepend('<div class="card card-footer w-25"><h2>نوبت شماره</h2><h1>'
+                        + appointment.TicketNumber +
+                        '</h1><h2>به</h2><h1>'
+                        + appointment.RoomName +
+                        '</h1>');
+                };
+
+                $.connection.hub.start().done(function () {
+                    console.log('Connected to SignalR hub');
+                });
+            });
+        </script>
+
     </asp:PlaceHolder>
 </body>
 </html>

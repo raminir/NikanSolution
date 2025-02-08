@@ -18,12 +18,11 @@ namespace UI
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-        }
+            var roomId = Request.QueryString["Id"];
 
-        protected void Button1_Click(object sender, EventArgs e)
-        {
-            var ticketNumber = _ticketService.GenerateTicketAsync(1);
-            Label1.Text = ticketNumber.ToString();
+            var ds = _ticketService.GetTodayTicketsForBoard();
+            rpt.DataSource = ds;
+            rpt.DataBind();
         }
     }
 }

@@ -123,5 +123,10 @@ namespace Infrastructure.Repositories
         {
             return _context.TicketInRooms.Find(id).StatusId;
         }
+
+        public TicketInRooms GetTicketInRoomById(int id)
+        {
+            return _context.TicketInRooms.Find(id);
+        }
     }
 }

@@ -8,12 +8,18 @@ using System.ComponentModel;
 using System.Web;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Microsoft.Owin;
+using Owin;
+[assembly: OwinStartup(typeof(UI.Global))]
 namespace UI
 {
     public class Global : HttpApplication
     {
         public static IUnityContainer Container { get; private set; }
-
+        public void Configuration(IAppBuilder app)
+        {
+            app.MapSignalR();
+        }
         void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup

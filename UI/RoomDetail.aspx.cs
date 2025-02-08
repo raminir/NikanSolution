@@ -1,4 +1,5 @@
 ﻿using Application.QueueManagement.Application.Services;
+using Application.Services;
 using Application.ViewModels;
 using Microsoft.Practices.Unity;
 using Models;
