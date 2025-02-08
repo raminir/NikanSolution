@@ -1,6 +1,5 @@
-﻿using Application.QueueManagement.Application.Services;
-using Application.Services;
-using Application.ViewModels;
+﻿using Application.Dtos;
+using Application.QueueManagement.Application.Services;
 using Microsoft.Practices.Unity;
 using Models;
 using System;
@@ -35,16 +34,16 @@ namespace UI
             switch (int.Parse(btn.CommandName))
             {
                 case (int)Models.StatusEnum.Waiting:
-                    _ticketService.UpdateStatus(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.Waiting });
+                    _ticketService.UpdateStatus(ticketId, new TicketUpdateDto() { StatusId = Models.StatusEnum.Waiting });
                     break;
                 case (int)Models.StatusEnum.InProgress:
-                    _ticketService.UpdateStatus(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.InProgress });
+                    _ticketService.UpdateStatus(ticketId, new TicketUpdateDto() { StatusId = Models.StatusEnum.InProgress });
                     break;
                 case (int)Models.StatusEnum.Done:
-                    _ticketService.UpdateTicketToDone(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.Done });
+                    _ticketService.UpdateTicketToDone(ticketId, new TicketUpdateDto() { StatusId = Models.StatusEnum.Done });
                     break;
                 case (int)Models.StatusEnum.cancel:
-                    _ticketService.UpdateStatus(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.cancel });
+                    _ticketService.UpdateStatus(ticketId, new TicketUpdateDto() { StatusId = Models.StatusEnum.cancel });
                     break;
                     //case "ThatBtnClick":
                     //    //DoSomethingElse(btn.CommandArgument.ToString());

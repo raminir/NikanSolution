@@ -1,5 +1,5 @@
-﻿using Application.Services;
-using Application.ViewModels;
+﻿using Application.Dtos;
+using Application.Services;
 using Models;
 using Models.Repository;
 using System;
@@ -60,17 +60,25 @@ namespace Application
                 return _ticketRepository.GetAllTodayTicketByRoomId(Id);
             }
 
-            public IList<TicketInRooms> GetTodayInProgressTickets()
+            public IList<TicketInRoomDto> GetTodayInProgressTickets()
             {
-                return _ticketRepository.GetTodayInProgressTickets();
+                var tickets = _ticketRepository.GetTodayInProgressTickets();
+                var resutl = new List<TicketInRoomDto>();
+
+                tickets.ForEach(ticket =>
+                {
+                    resutl.Add(new TicketInRoomDto { RoomName = ticket.Room.Name, TicketNumber = ticket.Ticket.TicketNumber });
+                });
+
+                return resutl;
             }
 
-            public void UpdateTicketToDone(int id, TicketUpdateViewModel input)
+            public void UpdateTicketToDone(int id, TicketUpdateDto input)
             {
                 UpdateStatus(id, input);
                 _ticketRepository.CopyToNextRoom(id);
             }
-            public void UpdateStatus(int id, TicketUpdateViewModel input)
+            public void UpdateStatus(int id, TicketUpdateDto input)
             {
                 var currentStatus = _ticketRepository.GetStatus(id);
 
@@ -94,7 +102,7 @@ namespace Application
             public void SendModelToHub(int TicketInRoomId)
             {
                 var ticketInRooms = _ticketRepository.GetTicketInRoomById(TicketInRoomId);
-                _appointmentService.CallAppointment(new TicketInRoomViewModel() { RoomName = ticketInRooms.Room.Name, TicketNumber = ticketInRooms.Ticket.TicketNumber });
+                _appointmentService.CallAppointment(new TicketInRoomDto() { RoomName = ticketInRooms.Room.Name, TicketNumber = ticketInRooms.Ticket.TicketNumber });
 
             }
         }

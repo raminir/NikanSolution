@@ -1,6 +1,6 @@
-﻿namespace Application.ViewModels
+﻿namespace Application.Dtos
 {
-    public class TicketInRoomViewModel
+    public class TicketInRoomDto
     {
         public string RoomName { get; set; }
         public int TicketNumber { get; set; }

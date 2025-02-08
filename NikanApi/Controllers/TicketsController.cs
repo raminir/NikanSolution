@@ -1,5 +1,5 @@
-﻿using Application.QueueManagement.Application.Services;
-using Application.ViewModels;
+﻿using Application.Dtos;
+using Application.QueueManagement.Application.Services;
 using Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -39,10 +39,17 @@ namespace NikanApi.Controllers
         }
 
         // PUT api/<controller>/5
-        public async Task<OkResult> Put(int id, [FromBody] TicketUpdateViewModel input)
+        public async Task<OkResult> Put(int id, [FromBody] TicketUpdateDto input)
         {
             _ticketService.UpdateStatus(id, input);
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("api/Tickets/GetTodayInProgressTickets")]
+        public IEnumerable<TicketInRoomDto> GetTodayInProgressTickets()
+        {
+            return _ticketService.GetTodayInProgressTickets();
         }
     }
 }

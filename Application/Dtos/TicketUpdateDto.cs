@@ -1,8 +1,8 @@
 ﻿using Models;
 
-namespace Application.ViewModels
+namespace Application.Dtos
 {
-    public class TicketUpdateViewModel
+    public class TicketUpdateDto
     {
         public int Id { get; set; }
         public int RoomId { get; set; }

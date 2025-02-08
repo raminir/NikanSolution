@@ -72,8 +72,8 @@
     <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\DepartmentService.cs" />
     <Compile Include="Services\TicketService.cs" />
-    <Compile Include="ViewModels\TicketInRoomViewModel.cs" />
-    <Compile Include="ViewModels\TicketUpdateViewModel.cs" />
+    <Compile Include="Dtos\TicketInRoomDto.cs" />
+    <Compile Include="Dtos\TicketUpdateDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Models.csproj">
