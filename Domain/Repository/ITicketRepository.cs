@@ -8,9 +8,10 @@ namespace Models.Repository
         Ticket CreateTicket(Ticket ticket);
         List<TicketInRooms> GetAll();
         List<TicketInRooms> GetTodayTicketsForBoard();
-        IList<TicketInRooms> GetTodayTicketAllByRoomId(int id);
+        IList<TicketInRooms> GetAllTodayTicketByRoomId(int id);
         int GetLastTicketNumber(DateTime date, int departmentId);
         void UpdateStatus(TicketInRooms model);
         void CopyToNextRoom(int ticketId);
+        StatusEnum GetStatus(int id);
     }
 }

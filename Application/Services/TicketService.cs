@@ -47,16 +47,6 @@ namespace Application
                 return ticket.TicketNumber;
             }
 
-            public void UpdateStatusAsyncUpdate(int id, TicketUpdateViewModel input)
-            {
-                var model = new TicketInRooms()
-                {
-                    Id = id,
-                    StatusId = input.StatusId,
-                };
-                _ticketRepository.UpdateStatus(model);
-            }
-
             public IList<TicketInRooms> GetAll()
             {
                 return _ticketRepository.GetAll();
@@ -64,18 +54,37 @@ namespace Application
 
             public IList<TicketInRooms> GetAllByRoomId(int Id)
             {
-                return _ticketRepository.GetTodayTicketAllByRoomId(Id);
+                return _ticketRepository.GetAllTodayTicketByRoomId(Id);
             }
 
             public IList<TicketInRooms> GetTodayTicketsForBoard()
             {
                 return _ticketRepository.GetTodayTicketsForBoard();
             }
-
-            public void CopyToNextRoom(int ticketId)
+            
+            public void UpdateTicketToDone(int id, TicketUpdateViewModel input)
             {
-                _ticketRepository.CopyToNextRoom(ticketId);
+                UpdateStatus(id, input);
+                _ticketRepository.CopyToNextRoom(id);
             }
+            public void UpdateStatus(int id, TicketUpdateViewModel input)
+            {
+                var currentStatus = _ticketRepository.GetStatus(id);
+
+                if (currentStatus != StatusEnum.InProgress && (input.StatusId == StatusEnum.Done || input.StatusId == StatusEnum.cancel))
+                {
+                    throw new InvalidOperationException("درصورتیکه که میخواهید انجام شده یا عدم مراجعه را بزنید باید وضعیت در حالت فراخوان  باشد.");
+                }
+
+                var model = new TicketInRooms()
+                {
+                    Id = id,
+                    StatusId = input.StatusId,
+                };
+
+                _ticketRepository.UpdateStatus(model);
+            }
+
         }
     }
 }

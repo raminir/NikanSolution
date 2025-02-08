@@ -50,19 +50,15 @@ namespace Infrastructure.Repositories
                 .ToList();
         }
 
-        public IList<TicketInRooms> GetTodayTicketAllByRoomId(int id)
+        public IList<TicketInRooms> GetAllTodayTicketByRoomId(int id)
         {
 
             var today = DateTime.Now.Date;
-            var currentRoom = _context.Rooms.Find(id);
-            var preRoom = _context.Rooms.Where(x => x.DepartmentId == currentRoom.DepartmentId)
-                .OrderByDescending(x => x.Id)
-                .FirstOrDefault(x => x.Id < id);
-            var preRoomId = preRoom?.Id;
+
             return _context.TicketInRooms
                 .Include(x => x.Room.Department)
                 .Include(x => x.Ticket)
-                .Where(x => x.RoomId == id || (preRoomId.HasValue && x.StatusId == StatusEnum.Done && x.RoomId == preRoomId))
+                .Where(x => x.RoomId == id)
                 .Where(x => x.Ticket.CreatedAt == today)
                 .OrderBy(x => x.StatusId)
                 .ThenByDescending(x => x.CalledAt)
@@ -121,6 +117,11 @@ namespace Infrastructure.Repositories
                     databaseContext = null;
                 }
             }
+        }
+
+        public StatusEnum GetStatus(int id)
+        {
+            return _context.TicketInRooms.Find(id).StatusId;
         }
     }
 }

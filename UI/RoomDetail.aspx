@@ -20,7 +20,7 @@
         <ItemTemplate>
             <tr>
                 <td>
-                    <%#Item.Ticket.CreatedAt.ToShortDateString() %>
+                    <%#Item.Ticket.CreatedAt.ToPersianDate() %>
                 </td>
                 <td>
                     <%#Item.Ticket.TicketNumber%>   
@@ -35,12 +35,10 @@
                     <%#Item.Room.Department.Name %>
                 </td>
                 <td>
-                    <asp:Button CssClass="btn btn-outline-primary" ID="InProgressButton" CommandName="<%#(int)Models.StatusEnum.InProgress%>" CommandArgument='<%#Item.Id%>' OnClick="StatusButton_Click" runat="server" Text="فراخوان " />
-                    <asp:Button CssClass="btn btn-outline-success" ID="DoneButton" CommandName="<%#(int)Models.StatusEnum.Done%>" CommandArgument='<%#Item.Id%>' OnClick="StatusButton_Click" runat="server" Text="انجام شد" />
-                    <asp:Button CssClass="btn btn-outline-danger" ID="Button1" CommandName="<%#(int)Models.StatusEnum.cancel%>" CommandArgument='<%#Item.Id%>' OnClick="StatusButton_Click" runat="server" Text="عدم مراجعه" />
-                </td>
-                <td>
-                    <asp:Button CssClass="btn btn-warning" CommandArgument='<%#Item.Id%>' OnClick="Button2_Click" ID="Button2" runat="server" Text="انتقال به بخش بعدی" />
+
+                    <asp:Button Visible="<%#Item.StatusId==Models.StatusEnum.Waiting %>" CssClass="btn btn-outline-primary" ID="InProgressButton" CommandName="<%#(int)Models.StatusEnum.InProgress%>" CommandArgument='<%#Item.Id%>' OnClick="StatusButton_Click" runat="server" Text="فراخوان " />
+                    <asp:Button Visible="<%#Item.StatusId==Models.StatusEnum.InProgress %>" CssClass="btn btn-outline-success" ID="DoneButton" CommandName="<%#(int)Models.StatusEnum.Done%>" CommandArgument='<%#Item.Id%>' OnClick="StatusButton_Click" runat="server" Text="انجام شد" />
+                    <asp:Button Visible="<%#Item.StatusId==Models.StatusEnum.InProgress %>" CssClass="btn btn-outline-danger" ID="Button1" CommandName="<%#(int)Models.StatusEnum.cancel%>" CommandArgument='<%#Item.Id%>' OnClick="StatusButton_Click" runat="server" Text="عدم مراجعه" />
                 </td>
             </tr>
         </ItemTemplate>

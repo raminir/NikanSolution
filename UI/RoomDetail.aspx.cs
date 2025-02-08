@@ -1,6 +1,5 @@
 ﻿using Application.QueueManagement.Application.Services;
 using Application.ViewModels;
-using Microsoft.Ajax.Utilities;
 using Microsoft.Practices.Unity;
 using Models;
 using System;
@@ -22,7 +21,7 @@ namespace UI
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)  
+            if (!IsPostBack)
             {
                 LoadTickets();
             }
@@ -35,16 +34,16 @@ namespace UI
             switch (int.Parse(btn.CommandName))
             {
                 case (int)Models.StatusEnum.Waiting:
-                    _ticketService.UpdateStatusAsyncUpdate(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.Waiting });
+                    _ticketService.UpdateStatus(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.Waiting });
                     break;
                 case (int)Models.StatusEnum.InProgress:
-                    _ticketService.UpdateStatusAsyncUpdate(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.InProgress });
+                    _ticketService.UpdateStatus(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.InProgress });
                     break;
                 case (int)Models.StatusEnum.Done:
-                    _ticketService.UpdateStatusAsyncUpdate(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.Done });
+                    _ticketService.UpdateTicketToDone(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.Done });
                     break;
                 case (int)Models.StatusEnum.cancel:
-                    _ticketService.UpdateStatusAsyncUpdate(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.cancel });
+                    _ticketService.UpdateStatus(ticketId, new TicketUpdateViewModel() { StatusId = Models.StatusEnum.cancel });
                     break;
                     //case "ThatBtnClick":
                     //    //DoSomethingElse(btn.CommandArgument.ToString());
@@ -53,13 +52,6 @@ namespace UI
             LoadTickets();
         }
 
-        protected void Button2_Click(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-            var ticketId = int.Parse(btn.CommandArgument);
-            _ticketService.CopyToNextRoom(ticketId);
-            LoadTickets();
-        }
         protected string GetStatusDisplayName(object statusId)
         {
             if (statusId == null) return "نامشخص";
