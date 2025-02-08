@@ -151,7 +151,7 @@
     <Content Include="Departments.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Room.aspx" />
+    <Content Include="RoomDetail.aspx" />
     <Content Include="Rooms.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -260,12 +260,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Room.aspx.cs">
-      <DependentUpon>Room.aspx</DependentUpon>
+    <Compile Include="RoomDetail.aspx.cs">
+      <DependentUpon>RoomDetail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Room.aspx.designer.cs">
-      <DependentUpon>Room.aspx</DependentUpon>
+    <Compile Include="RoomDetail.aspx.designer.cs">
+      <DependentUpon>RoomDetail.aspx</DependentUpon>
     </Compile>
     <Compile Include="Rooms.aspx.cs">
       <DependentUpon>Rooms.aspx</DependentUpon>

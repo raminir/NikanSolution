@@ -91,18 +91,36 @@ namespace Infrastructure.Repositories
 
         public void CopyToNextRoom(int ticketInRooms)
         {
-            TicketInRooms current = _context.TicketInRooms.FirstOrDefault(x => x.Id == ticketInRooms);
-            var currentDepartmentId = current.Room.DepartmentId;
-            var nextRoom = _context.Rooms.Where(x => x.DepartmentId == currentDepartmentId).FirstOrDefault(x => x.Id > current.RoomId);
-            if (nextRoom != null)
+            QueueDbContext databaseContext = null;
+            try
             {
-                current.RoomId = nextRoom.Id;
-                current.CalledAt = DateTime.Now;
-                current.StatusId = StatusEnum.Waiting;
-                _context.TicketInRooms.Add(current);
-                _context.SaveChangesAsync();
-            }
+                databaseContext =
+                    new QueueDbContext();
 
+                TicketInRooms current = databaseContext.TicketInRooms.Include(x => x.Room).FirstOrDefault(x => x.Id == ticketInRooms);
+                var currentDepartmentId = current.Room.DepartmentId;
+                var nextRoom = databaseContext.Rooms.Where(x => x.DepartmentId == currentDepartmentId).FirstOrDefault(x => x.Id > current.RoomId);
+                if (nextRoom != null)
+                {
+                    current.RoomId = nextRoom.Id;
+                    current.CalledAt = DateTime.Now;
+                    current.StatusId = StatusEnum.Waiting;
+                    databaseContext.TicketInRooms.Add(current);
+                    databaseContext.SaveChanges();
+                }
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (databaseContext != null)
+                {
+                    databaseContext.Dispose();
+                    databaseContext = null;
+                }
+            }
         }
     }
 }

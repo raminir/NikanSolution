@@ -58,6 +58,7 @@ namespace UI
             Button btn = (Button)sender;
             var ticketId = int.Parse(btn.CommandArgument);
             _ticketService.CopyToNextRoom(ticketId);
+            LoadTickets();
         }
         protected string GetStatusDisplayName(object statusId)
         {

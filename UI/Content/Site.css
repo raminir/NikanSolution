@@ -91,6 +91,6 @@ textarea {
         padding: 0;
     }
 }
-body {
+* {
     font-family: 'Vazirmatn';
 }

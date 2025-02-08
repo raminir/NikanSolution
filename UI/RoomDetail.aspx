@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Room.aspx.cs" Inherits="UI.Room" EnableEventValidation="false" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoomDetail.aspx.cs" Inherits="UI.Room" EnableEventValidation="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <asp:Repeater ID="rpt" runat="server" ItemType="Models.TicketInRooms">
@@ -40,7 +40,7 @@
                     <asp:Button CssClass="btn btn-outline-danger" ID="Button1" CommandName="<%#(int)Models.StatusEnum.cancel%>" CommandArgument='<%#Item.Id%>' OnClick="StatusButton_Click" runat="server" Text="عدم مراجعه" />
                 </td>
                 <td>
-                    <asp:Button CssClass="btn btn-warning" CommandArgument='<%#Item.Id%>' OnClick="Button2_Click" ID="Button2" runat="server" Text="انتقال به اتاق بعدی" />
+                    <asp:Button CssClass="btn btn-warning" CommandArgument='<%#Item.Id%>' OnClick="Button2_Click" ID="Button2" runat="server" Text="انتقال به بخش بعدی" />
                 </td>
             </tr>
         </ItemTemplate>
