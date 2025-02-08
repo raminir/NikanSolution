@@ -46,6 +46,7 @@
     <Compile Include="Department.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IDepartmentRepository.cs" />
+    <Compile Include="Repository\IRoomRepository.cs" />
     <Compile Include="Repository\ITicketRepository.cs" />
     <Compile Include="Room.cs" />
     <Compile Include="StatusEnum.cs" />

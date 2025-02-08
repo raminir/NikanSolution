@@ -1,18 +1,13 @@
-﻿using Application.QueueManagement.Application.Services;
-using Application.Services;
+﻿using Application.Services;
 using Microsoft.Practices.Unity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace UI
 {
     public partial class SiteMaster : MasterPage
     {
-        private DepartmentService _departmentService;
+        private RoomService _roomService;
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -20,11 +15,11 @@ namespace UI
             var container = (IUnityContainer)Application["UnityContainer"];
 
             // Resolve the IUserService dependency
-            _departmentService = container.Resolve<DepartmentService>();
+            _roomService = container.Resolve<RoomService>();
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            var ds = _departmentService.GetAllRooms();
+            var ds = _roomService.GetAllRooms();
             rptMenu.DataSource = ds;
             rptMenu.DataBind();
         }

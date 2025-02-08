@@ -29,7 +29,7 @@ namespace UI
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
             string name = txtName.Text;
-            departmentService.GenerateDepartmentAsync(name);
+            departmentService.Create(name);
             string result = $"{name} ذخیره شد.";
             Response.Write($"<script>alert('{result}');</script>");
         }

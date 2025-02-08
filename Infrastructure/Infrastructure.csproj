@@ -45,6 +45,7 @@
     <Compile Include="QueueDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
+    <Compile Include="Repositories\RoomRepository.cs" />
     <Compile Include="Repositories\TicketRepository.cs" />
   </ItemGroup>
   <ItemGroup>

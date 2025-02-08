@@ -239,7 +239,6 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\UnityWebFormsStart.cs" />
     <Compile Include="CreateDepartment.aspx.cs">
       <DependentUpon>CreateDepartment.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

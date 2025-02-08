@@ -1,5 +1,4 @@
 ﻿using Application.Services;
-using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace NikanApi.Controllers
@@ -14,9 +13,9 @@ namespace NikanApi.Controllers
         }
 
         // POST api/<controller>
-        public async Task<int> Post(string name)
+        public int Post(string name)
         {
-            var departmentId = await _departmentService.GenerateDepartmentAsync(name);
+            var departmentId = _departmentService.Create(name);
             return departmentId;
         }
     }

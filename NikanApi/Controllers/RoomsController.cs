@@ -1,25 +1,26 @@
 ﻿using Application.Services;
 using Models;
-using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace NikanApi.Controllers
 {
     public class RoomsController : ApiController
     {
-        private readonly DepartmentService _departmentService;
+        private readonly RoomService _roomService;
 
-        public RoomsController(DepartmentService departmentService)
+        public RoomsController(RoomService roomService)
         {
-            _departmentService = departmentService;
+            _roomService = roomService;
         }
 
 
 
+
+
         // POST api/<controller>
-        public async Task<int>  Post(int departmentId , string name )
+        public int Post(int departmentId, string name)
         {
-            var roomId = await _departmentService.GenerateRoomAsync(new Room() { DepartmentId = departmentId,Name = name});
+            var roomId = _roomService.CreateRoom(new Room() { DepartmentId = departmentId, Name = name });
             return roomId;
         }
     }

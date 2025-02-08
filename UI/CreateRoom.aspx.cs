@@ -6,7 +6,7 @@ namespace UI
 {
     public partial class CreateRoom : System.Web.UI.Page
     {
-        private DepartmentService departmentService;
+        private RoomService _roomService;
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -14,7 +14,7 @@ namespace UI
             var container = (IUnityContainer)Application["UnityContainer"];
 
             // Resolve the IUserService dependency
-            departmentService = container.Resolve<DepartmentService>();
+            _roomService = container.Resolve<RoomService>();
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -25,7 +25,7 @@ namespace UI
         {
             string name = txtName.Text;
             string departmentId = DepartmentIdTextBox.Text;
-            departmentService.GenerateRoomAsync(new Models.Room() { Name = name, DepartmentId = int.Parse(departmentId) });
+            _roomService.CreateRoom(new Models.Room() { Name = name, DepartmentId = int.Parse(departmentId) });
             string result = $"{name} ذخیره شد.";
             Response.Write($"<script>alert('{result}');</script>");
 

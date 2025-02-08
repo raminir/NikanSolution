@@ -6,7 +6,7 @@ namespace UI
 {
     public partial class Rooms : System.Web.UI.Page
     {
-        private DepartmentService _departmentService;
+        private RoomService roomService;
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -14,11 +14,11 @@ namespace UI
             var container = (IUnityContainer)Application["UnityContainer"];
 
             // Resolve the IUserService dependency
-            _departmentService = container.Resolve<DepartmentService>();
+            roomService = container.Resolve<RoomService>();
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            var ds = _departmentService.GetAllRooms();
+            var ds = roomService.GetAllRooms();
             rpt.DataSource = ds;
             rpt.DataBind();
         }

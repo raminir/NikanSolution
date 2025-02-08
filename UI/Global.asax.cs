@@ -10,6 +10,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Microsoft.Owin;
 using Owin;
+using Domain.Repository;
 [assembly: OwinStartup(typeof(UI.Global))]
 namespace UI
 {
@@ -33,6 +34,7 @@ namespace UI
             Container.RegisterType<ITicketRepository, TicketRepository>(new HierarchicalLifetimeManager());
             Container.RegisterType<DepartmentService>();
             Container.RegisterType<IDepartmentRepository, DepartmentRepository>(new HierarchicalLifetimeManager());
+            Container.RegisterType<IRoomRepository, RoomRepository>(new HierarchicalLifetimeManager());
 
             // Store the container in Application state
             Application["UnityContainer"] = Container;

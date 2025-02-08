@@ -5,10 +5,8 @@ namespace Models.Repository
 {
     public interface IDepartmentRepository
     {
-        Task<Department> CreateDepartmentAsync(Department department);
-        Task<Room> CreateRoomAsync(Room room);
-        IList<Department> GetAllDepartments();
-        IList<Room> GetAllRoom();
+        Task<Department> Create(Department department);
+        IList<Department> GetAll();
         Department GetById(int departmentId);
     }
 }

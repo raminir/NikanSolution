@@ -69,6 +69,7 @@
     <Compile Include="NotificationHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AppointmentService.cs" />
+    <Compile Include="Services\RoomService.cs" />
     <Compile Include="Services\DepartmentService.cs" />
     <Compile Include="Services\TicketService.cs" />
     <Compile Include="ViewModels\TicketInRoomViewModel.cs" />
@@ -79,13 +80,6 @@
       <Project>{c068fd09-7fb9-43d3-a22d-08ab02113002}</Project>
       <Name>Models</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Scripts\jquery-1.6.4-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.6.4.js" />
-    <Content Include="Scripts\jquery-1.6.4.min.js" />
-    <Content Include="Scripts\jquery.signalR-2.4.3.js" />
-    <Content Include="Scripts\jquery.signalR-2.4.3.min.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

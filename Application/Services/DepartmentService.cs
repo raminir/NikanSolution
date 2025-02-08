@@ -1,8 +1,6 @@
 ﻿using Models;
 using Models.Repository;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -15,30 +13,21 @@ namespace Application.Services
             _departmentRepository = departmentRepository;
         }
 
-        public async Task<int> GenerateDepartmentAsync(string name)
+        public int Create(string name)
         {
             var department = new Department
             {
                 Name = name
             };
 
-            await _departmentRepository.CreateDepartmentAsync(department);
+            _departmentRepository.Create(department);
             return department.Id;
-        }
-        public async Task<int> GenerateRoomAsync(Room room)
-        {
-            await _departmentRepository.CreateRoomAsync(room);
-            return room.Id;
         }
 
         public IList<Department> GetAllDepartments()
         {
-            return _departmentRepository.GetAllDepartments();
+            return _departmentRepository.GetAll();
         }
 
-        public IList<Room> GetAllRooms()
-        {
-            return _departmentRepository.GetAllRoom();
-        }
     }
 }
