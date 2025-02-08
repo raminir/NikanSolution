@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Departments.aspx.cs" Inherits="UI.Departments" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:Repeater ID="rpt" runat="server">
+    <asp:Repeater ID="rpt" runat="server" ItemType="Models.Department">
         <HeaderTemplate>
             <table class="table">
                 <tr>
@@ -18,10 +18,10 @@
         <ItemTemplate>
             <tr>
                 <td>
-                    <%#Eval("Id")%>
-             </td>
+                    <%#:Item.Id %>
+                </td>
                 <td>
-                    <%#Eval("Name")%>
+                    <%#:Item.Name %>
                 </td>
 
                 <td>

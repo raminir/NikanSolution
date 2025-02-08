@@ -48,12 +48,12 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Room">تمام نوبت ها</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Board">نمایشگر</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Departments">  دپارتمان ها</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Rooms"> بخش ها</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Departments">دپارتمان ها</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/Rooms">بخش ها</a></li>
 
-                        <asp:Repeater ID="rptMenu" runat="server">
+                        <asp:Repeater ID="rptMenu" runat="server" ItemType="Models.Room">
                             <ItemTemplate>
-                                <li class="nav-item"><a class="nav-link" runat="server" href='<%#"~/Room?id="+Eval("Id")%>'><%#Eval(nameof(Models.Room.Name))%></a></li>
+                                <li class="nav-item"><a class="nav-link" runat="server" href='<%#"~/Room?id="+Item.Id%>'><%#Item.Name+"|"+Item.Department.Name%></a></li>
                             </ItemTemplate>
                         </asp:Repeater>
                     </ul>
@@ -63,7 +63,7 @@
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
-           
+
         </div>
     </form>
     <asp:PlaceHolder runat="server">
