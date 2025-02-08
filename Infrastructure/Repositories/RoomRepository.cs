@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
             _context.Rooms.Add(room);
             _context.SaveChanges();
         }
-        public IList<Room> GetAllRoom()
+        public IList<Room> GetAll()
         {
             return _context.Rooms.Include(x => x.Department).ToList();
         }

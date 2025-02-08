@@ -22,7 +22,7 @@ namespace Application.Services
 
         public IList<Room> GetAllRooms()
         {
-            return _roomRepository.GetAllRoom();
+            return _roomRepository.GetAll();
         }
     }
 }

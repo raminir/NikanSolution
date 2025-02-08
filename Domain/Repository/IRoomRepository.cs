@@ -6,6 +6,6 @@ namespace Domain.Repository
     public interface IRoomRepository
     {
         void Create(Room room);
-        IList<Room> GetAllRoom();
+        IList<Room> GetAll();
     }
 }

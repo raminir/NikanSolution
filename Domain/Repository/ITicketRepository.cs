@@ -7,7 +7,7 @@ namespace Models.Repository
     {
         Ticket CreateTicket(Ticket ticket);
         List<TicketInRooms> GetAll();
-        List<TicketInRooms> GetTodayTicketsForBoard();
+        List<TicketInRooms> GetTodayInProgressTickets();
         IList<TicketInRooms> GetAllTodayTicketByRoomId(int id);
         int GetLastTicketNumber(DateTime date, int departmentId);
         void UpdateStatus(TicketInRooms model);

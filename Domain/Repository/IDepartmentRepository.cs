@@ -5,7 +5,7 @@ namespace Models.Repository
 {
     public interface IDepartmentRepository
     {
-        Task<Department> Create(Department department);
+        Department Create(Department department);
         IList<Department> GetAll();
         Department GetById(int departmentId);
     }

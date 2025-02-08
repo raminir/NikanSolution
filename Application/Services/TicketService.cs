@@ -60,9 +60,9 @@ namespace Application
                 return _ticketRepository.GetAllTodayTicketByRoomId(Id);
             }
 
-            public IList<TicketInRooms> GetTodayTicketsForBoard()
+            public IList<TicketInRooms> GetTodayInProgressTickets()
             {
-                return _ticketRepository.GetTodayTicketsForBoard();
+                return _ticketRepository.GetTodayInProgressTickets();
             }
 
             public void UpdateTicketToDone(int id, TicketUpdateViewModel input)

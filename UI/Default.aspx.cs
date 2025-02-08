@@ -20,7 +20,7 @@ namespace UI
         {
             var roomId = Request.QueryString["Id"];
 
-            var ds = _ticketService.GetTodayTicketsForBoard();
+            var ds = _ticketService.GetTodayInProgressTickets();
             rpt.DataSource = ds;
             rpt.DataBind();
         }

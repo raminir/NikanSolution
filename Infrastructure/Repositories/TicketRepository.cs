@@ -38,7 +38,7 @@ namespace Infrastructure.Repositories
                 .ToList();
         }
 
-        public List<TicketInRooms> GetTodayTicketsForBoard()
+        public List<TicketInRooms> GetTodayInProgressTickets()
         {
             var today = DateTime.Now.Date;
             return _context.TicketInRooms
@@ -87,36 +87,25 @@ namespace Infrastructure.Repositories
 
         public void CopyToNextRoom(int ticketInRooms)
         {
-            QueueDbContext databaseContext = null;
             try
             {
-                databaseContext =
-                    new QueueDbContext();
-
-                TicketInRooms current = databaseContext.TicketInRooms.Include(x => x.Room).FirstOrDefault(x => x.Id == ticketInRooms);
+                TicketInRooms current = _context.TicketInRooms.Include(x => x.Room).FirstOrDefault(x => x.Id == ticketInRooms);
                 var currentDepartmentId = current.Room.DepartmentId;
-                var nextRoom = databaseContext.Rooms.Where(x => x.DepartmentId == currentDepartmentId).FirstOrDefault(x => x.Id > current.RoomId);
+                var nextRoom = _context.Rooms.Where(x => x.DepartmentId == currentDepartmentId).FirstOrDefault(x => x.Id > current.RoomId);
                 if (nextRoom != null)
                 {
                     current.RoomId = nextRoom.Id;
                     current.CalledAt = DateTime.Now;
                     current.StatusId = StatusEnum.Waiting;
-                    databaseContext.TicketInRooms.Add(current);
-                    databaseContext.SaveChanges();
+                    _context.TicketInRooms.Add(current);
+                    _context.SaveChanges();
                 }
             }
             catch (System.Exception ex)
             {
                 throw ex;
             }
-            finally
-            {
-                if (databaseContext != null)
-                {
-                    databaseContext.Dispose();
-                    databaseContext = null;
-                }
-            }
+
         }
 
         public StatusEnum GetStatus(int id)
