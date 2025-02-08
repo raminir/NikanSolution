@@ -41,7 +41,7 @@ namespace NikanApi.Controllers
         // PUT api/<controller>/5
         public async Task<OkResult> Put(int id, [FromBody] TicketUpdateViewModel input)
         {
-            await _ticketService.UpdateStatusAsyncUpdate(id, input);
+            _ticketService.UpdateStatusAsyncUpdate(id, input);
             return Ok();
         }
     }

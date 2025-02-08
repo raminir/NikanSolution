@@ -37,6 +37,10 @@
     <Compile Include="Migrations\202502041115506_init.Designer.cs">
       <DependentUpon>202502041115506_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202502050755045_AddCalledAt.cs" />
+    <Compile Include="Migrations\202502050755045_AddCalledAt.Designer.cs">
+      <DependentUpon>202502050755045_AddCalledAt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="QueueDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -48,14 +52,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Models.csproj">
-      <Project>{7AADE96A-E73C-4035-BD2E-12D7256391C7}</Project>
-      <Name>Models</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Migrations\202502041115506_init.resx">
       <DependentUpon>202502041115506_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202502050755045_AddCalledAt.resx">
+      <DependentUpon>202502050755045_AddCalledAt.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +71,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Models.csproj">
+      <Project>{c068fd09-7fb9-43d3-a22d-08ab02113002}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

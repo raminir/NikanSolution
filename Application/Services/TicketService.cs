@@ -3,7 +3,7 @@ using Models;
 using Models.Repository;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace Application
 {
@@ -12,20 +12,23 @@ namespace Application
         public class TicketService
         {
             private readonly ITicketRepository _ticketRepository;
-
-            public TicketService(ITicketRepository ticketRepository)
+            private readonly IDepartmentRepository _departmentRepository;
+            public TicketService(ITicketRepository ticketRepository, IDepartmentRepository departmentRepository)
             {
                 _ticketRepository = ticketRepository;
+                _departmentRepository = departmentRepository;
             }
-            public int GetNextTicketNumber(DateTime date)
+            public int GetNextTicketNumber(DateTime date, int departmentId)
             {
-                int lastNumber = _ticketRepository.GetLastTicketNumber(date);
+                int lastNumber = _ticketRepository.GetLastTicketNumber(date, departmentId);
                 return lastNumber + 1;
             }
 
-            public int GenerateTicketAsync(int roomId)
+            public int GenerateTicketAsync(int departmentId)
             {
-                int newTicketNumber = GetNextTicketNumber(DateTime.Now.Date);
+                var department = _departmentRepository.GetById(departmentId);
+                var firstRoomId = department.Rooms.FirstOrDefault().Id;
+                int newTicketNumber = GetNextTicketNumber(DateTime.Now.Date,departmentId);
 
                 var ticket = new Ticket
                 {
@@ -35,27 +38,43 @@ namespace Application
                 ticket.TicketInRooms = new List<TicketInRooms> {
                     new TicketInRooms()
                     {
-                        RoomId = roomId,
-                        StatusId = StatusEnum.Waiting
+                        RoomId = firstRoomId,
+                        StatusId = StatusEnum.Waiting,
+                        CalledAt = DateTime.Now,
                     }
                 };
-                _ticketRepository.CreateTicketAsync(ticket);
+                _ticketRepository.CreateTicket(ticket);
                 return ticket.TicketNumber;
             }
 
-            public async Task UpdateStatusAsyncUpdate(int id, TicketUpdateViewModel input)
+            public void UpdateStatusAsyncUpdate(int id, TicketUpdateViewModel input)
             {
                 var model = new TicketInRooms()
                 {
                     Id = id,
                     StatusId = input.StatusId,
                 };
-                await _ticketRepository.UpdateStatusAsync(model);
+                _ticketRepository.UpdateStatus(model);
             }
 
             public IList<TicketInRooms> GetAll()
             {
                 return _ticketRepository.GetAll();
+            }
+
+            public IList<TicketInRooms> GetAllByRoomId(int Id)
+            {
+                return _ticketRepository.GetTodayTicketAllByRoomId(Id);
+            }
+
+            public IList<TicketInRooms> GetTodayTicketsForBoard()
+            {
+                return _ticketRepository.GetTodayTicketsForBoard();
+            }
+
+            public void CopyToNextRoom(int ticketId)
+            {
+                _ticketRepository.CopyToNextRoom(ticketId);
             }
         }
     }

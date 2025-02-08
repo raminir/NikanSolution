@@ -450,7 +450,7 @@
       <Name>Application</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain\Models.csproj">
-      <Project>{7aade96a-e73c-4035-bd2e-12d7256391c7}</Project>
+      <Project>{c068fd09-7fb9-43d3-a22d-08ab02113002}</Project>
       <Name>Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">

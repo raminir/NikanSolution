@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DepartmentService.cs" />
     <Compile Include="Services\TicketService.cs" />
@@ -48,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Models.csproj">
-      <Project>{7AADE96A-E73C-4035-BD2E-12D7256391C7}</Project>
+      <Project>{c068fd09-7fb9-43d3-a22d-08ab02113002}</Project>
       <Name>Models</Name>
     </ProjectReference>
   </ItemGroup>

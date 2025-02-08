@@ -20,7 +20,7 @@ namespace NikanApi
                       "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
+                      "~/Content/bootstrap.rtl.css",
                       "~/Content/site.css"));
         }
     }

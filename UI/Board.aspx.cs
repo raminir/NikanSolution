@@ -1,18 +1,13 @@
 ﻿using Application.QueueManagement.Application.Services;
-using Application.Services;
+using Microsoft.Ajax.Utilities;
 using Microsoft.Practices.Unity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace UI
 {
-    public partial class SiteMaster : MasterPage
+    public partial class Board : System.Web.UI.Page
     {
-        private DepartmentService _departmentService;
+        private TicketService _ticketService;
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -20,13 +15,15 @@ namespace UI
             var container = (IUnityContainer)Application["UnityContainer"];
 
             // Resolve the IUserService dependency
-            _departmentService = container.Resolve<DepartmentService>();
+            _ticketService = container.Resolve<TicketService>();
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            var ds = _departmentService.GetAllRooms();
-            rptMenu.DataSource = ds;
-            rptMenu.DataBind();
+            var roomId = Request.QueryString["Id"];
+
+            var ds = _ticketService.GetTodayTicketsForBoard();
+            rpt.DataSource = ds;
+            rpt.DataBind();
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿using Models.Repository;
-using Models;
+﻿using Models;
+using Models.Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -31,6 +29,16 @@ namespace Application.Services
         {
             await _departmentRepository.CreateRoomAsync(room);
             return room.Id;
+        }
+
+        public IList<Department> GetAllDepartments()
+        {
+            return _departmentRepository.GetAllDepartments();
+        }
+
+        public IList<Room> GetAllRooms()
+        {
+            return _departmentRepository.GetAllRoom();
         }
     }
 }

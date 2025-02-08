@@ -14,14 +14,10 @@ namespace UI
             // Retrieve the Unity container from Application state
             var container = (IUnityContainer)Application["UnityContainer"];
 
-            // Resolve the IUserService dependency
             _ticketService = container.Resolve<TicketService>();
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            var ds = _ticketService.GetAll();
-            rpt.DataSource = ds;
-            rpt.DataBind();
         }
 
         protected void Button1_Click(object sender, EventArgs e)

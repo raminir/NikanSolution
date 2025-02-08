@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Models.Repository
 {
@@ -6,5 +7,8 @@ namespace Models.Repository
     {
         Task<Department> CreateDepartmentAsync(Department department);
         Task<Room> CreateRoomAsync(Room room);
+        IList<Department> GetAllDepartments();
+        IList<Room> GetAllRoom();
+        Department GetById(int departmentId);
     }
 }
