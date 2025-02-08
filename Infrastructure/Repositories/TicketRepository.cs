@@ -50,19 +50,39 @@ namespace Infrastructure.Repositories
                 .ToList();
         }
 
-        public IList<TicketInRooms> GetAllTodayTicketByRoomId(int id)
+        public List<TicketInRooms> GetAllTodayTicketByRoomId(int id)
         {
+            QueueDbContext databaseContext = null;
+            try
+            {
+                databaseContext =
+                    new QueueDbContext();
 
-            var today = DateTime.Now.Date;
+                var today = DateTime.Now.Date;
 
-            return _context.TicketInRooms
-                .Include(x => x.Room.Department)
-                .Include(x => x.Ticket)
-                .Where(x => x.RoomId == id)
-                .Where(x => x.Ticket.CreatedAt == today)
-                .OrderBy(x => x.StatusId)
-                .ThenByDescending(x => x.CalledAt)
-                .ToList();
+                return databaseContext.TicketInRooms
+                    .Include(x => x.Room.Department)
+                    .Include(x => x.Ticket)
+                    .Where(x => x.RoomId == id)
+                    .Where(x => x.Ticket.CreatedAt == today)
+                    .OrderBy(x => x.StatusId)
+                    .ThenByDescending(x => x.CalledAt)
+                    .ToList();
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (databaseContext != null)
+                {
+                    databaseContext.Dispose();
+                    databaseContext = null;
+                }
+            }
+
+            
         }
 
         public int GetLastTicketNumber(DateTime date, int departmentId)
@@ -115,7 +135,7 @@ namespace Infrastructure.Repositories
 
         public TicketInRooms GetTicketInRoomById(int id)
         {
-            return _context.TicketInRooms.Find(id);
+            return _context.TicketInRooms.Include(x => x.Room).Include(x => x.Ticket).FirstOrDefault(x => x.Id == id);
         }
     }
 }

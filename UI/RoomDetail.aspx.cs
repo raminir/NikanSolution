@@ -34,16 +34,16 @@ namespace UI
             switch (int.Parse(btn.CommandName))
             {
                 case (int)Models.StatusEnum.Waiting:
-                    _ticketService.UpdateStatus(ticketId, new TicketUpdateDto() { StatusId = Models.StatusEnum.Waiting });
+                    _ticketService.UpdateStatus(ticketId, new UpdateTicketStatusRequest() { StatusId = Models.StatusEnum.Waiting });
                     break;
                 case (int)Models.StatusEnum.InProgress:
-                    _ticketService.UpdateStatus(ticketId, new TicketUpdateDto() { StatusId = Models.StatusEnum.InProgress });
+                    _ticketService.UpdateStatus(ticketId, new UpdateTicketStatusRequest() { StatusId = Models.StatusEnum.InProgress });
                     break;
                 case (int)Models.StatusEnum.Done:
-                    _ticketService.UpdateTicketToDone(ticketId, new TicketUpdateDto() { StatusId = Models.StatusEnum.Done });
+                    _ticketService.UpdateTicketToDone(ticketId, new UpdateTicketStatusRequest() { StatusId = Models.StatusEnum.Done });
                     break;
                 case (int)Models.StatusEnum.cancel:
-                    _ticketService.UpdateStatus(ticketId, new TicketUpdateDto() { StatusId = Models.StatusEnum.cancel });
+                    _ticketService.UpdateStatus(ticketId, new UpdateTicketStatusRequest() { StatusId = Models.StatusEnum.cancel });
                     break;
                     //case "ThatBtnClick":
                     //    //DoSomethingElse(btn.CommandArgument.ToString());
@@ -68,9 +68,7 @@ namespace UI
         {
             var roomId = Request.QueryString["Id"];
 
-            var ds = string.IsNullOrWhiteSpace(roomId)
-                ? _ticketService.GetAll()
-                : _ticketService.GetAllByRoomId(int.Parse(roomId));
+            var ds = _ticketService.GetAllByRoomId(int.Parse(roomId));
 
             rpt.DataSource = ds;
             rpt.DataBind();

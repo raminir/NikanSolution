@@ -1,10 +1,7 @@
 ﻿using Application.Dtos;
 using Application.QueueManagement.Application.Services;
-using Models;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Results;
 
 namespace NikanApi.Controllers
 {
@@ -18,38 +15,39 @@ namespace NikanApi.Controllers
             _ticketService = ticketService;
         }
 
-        // GET api/<controller>
-        public IEnumerable<TicketInRooms> Get()
-        {
-            return _ticketService.GetAll();
-        }
-
-        // GET api/<controller>/5
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST api/<controller>
-        public int Post([FromBody] int id)
+        public int Post([FromBody] int departmentId)
         {
-            var ticketNumber = _ticketService.GenerateTicketAsync(id);
+            var ticketNumber = _ticketService.GenerateTicketAsync(departmentId);
             return ticketNumber;
 
         }
 
-        // PUT api/<controller>/5
-        public async Task<OkResult> Put(int id, [FromBody] TicketUpdateDto input)
-        {
-            _ticketService.UpdateStatus(id, input);
-            return Ok();
-        }
-
         [HttpGet]
-        [Route("api/Tickets/GetTodayInProgressTickets")]
+        [Route("GetTodayInProgressTickets")]
         public IEnumerable<TicketInRoomDto> GetTodayInProgressTickets()
         {
             return _ticketService.GetTodayInProgressTickets();
+        }
+
+        [HttpGet]
+        [Route("byroom/{roomId}")]
+        public IEnumerable<TicketInRoomDto> GetTicketsByRoomId(int roomId)
+        {
+            return _ticketService.GetAllByRoomId(roomId);
+        }
+
+        [HttpPatch]
+        [Route("{id}/updatestatus")]
+        public IHttpActionResult UpdateStatus(int id, [FromBody] UpdateTicketStatusRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request body is null.");
+            }
+            _ticketService.UpdateStatus(id, request);
+            return Ok();
         }
     }
 }

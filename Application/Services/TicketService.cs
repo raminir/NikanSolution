@@ -55,9 +55,24 @@ namespace Application
                 return _ticketRepository.GetAll();
             }
 
-            public IList<TicketInRooms> GetAllByRoomId(int Id)
+            public IList<TicketInRoomDto> GetAllByRoomId(int Id)
             {
-                return _ticketRepository.GetAllTodayTicketByRoomId(Id);
+                var tickets = _ticketRepository.GetAllTodayTicketByRoomId(Id);
+                var resutl = new List<TicketInRoomDto>();
+
+                tickets.ForEach(ticket =>
+                {
+                    resutl.Add(new TicketInRoomDto
+                    {
+                        Id = ticket.Id,
+                        DepartmentName = ticket.Room.Department.Name,
+                        RoomName = ticket.Room.Name,
+                        TicketNumber = ticket.Ticket.TicketNumber,
+                        CreatedAt = ticket.Ticket.CreatedAt,
+                        StatusId = ticket.StatusId,
+                    });
+                });
+                return resutl;
             }
 
             public IList<TicketInRoomDto> GetTodayInProgressTickets()
@@ -73,12 +88,12 @@ namespace Application
                 return resutl;
             }
 
-            public void UpdateTicketToDone(int id, TicketUpdateDto input)
+            public void UpdateTicketToDone(int id, UpdateTicketStatusRequest input)
             {
                 UpdateStatus(id, input);
                 _ticketRepository.CopyToNextRoom(id);
             }
-            public void UpdateStatus(int id, TicketUpdateDto input)
+            public void UpdateStatus(int id, UpdateTicketStatusRequest input)
             {
                 var currentStatus = _ticketRepository.GetStatus(id);
 

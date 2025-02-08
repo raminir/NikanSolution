@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="RoomDetail.aspx.cs" Inherits="UI.Room" EnableEventValidation="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:Repeater ID="rpt" runat="server" ItemType="Models.TicketInRooms">
+    <asp:Repeater ID="rpt" runat="server" ItemType="Application.Dtos.TicketInRoomDto">
         <HeaderTemplate>
             <table class="table">
                 <tr>
@@ -20,19 +20,19 @@
         <ItemTemplate>
             <tr>
                 <td>
-                    <%#Item.Ticket.CreatedAt.ToPersianDate() %>
+                    <%#Item.CreatedAt.ToPersianDate() %>
                 </td>
                 <td>
-                    <%#Item.Ticket.TicketNumber%>   
+                    <%#Item.TicketNumber%>   
                 </td>
                 <td>
                     <%# GetStatusDisplayName(Eval("StatusId")) %>
                 </td>
                 <td>
-                    <%#Item.Room.Name %>
+                    <%#Item.RoomName %>
                 </td>
                 <td>
-                    <%#Item.Room.Department.Name %>
+                    <%#Item.DepartmentName %>
                 </td>
                 <td>
 
