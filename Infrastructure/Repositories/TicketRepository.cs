@@ -33,54 +33,9 @@ namespace Infrastructure.Repositories
         public List<TicketInRooms> GetAll()
         {
             return _context.TicketInRooms
-                .Include(x => x.Room.Department)
-                .Include(x => x.Ticket)
+                .Include(x=>x.Room)
+                .Include(x=>x.Ticket)
                 .ToList();
-        }
-
-        public List<TicketInRooms> GetTodayInProgressTickets()
-        {
-            var today = DateTime.Now.Date;
-            return _context.TicketInRooms
-                .Include(x => x.Room.Department)
-                .Include(x => x.Ticket)
-                .OrderByDescending(x => x.CalledAt)
-                .Where(x => x.Ticket.CreatedAt == today)
-                .Where(x => x.StatusId == StatusEnum.InProgress)
-                .ToList();
-        }
-
-        public List<TicketInRooms> GetAllTodayTicketByRoomId(int id)
-        {
-            QueueDbContext databaseContext = null;
-            try
-            {
-                databaseContext =
-                    new QueueDbContext();
-
-                var today = DateTime.Now.Date;
-
-                return databaseContext.TicketInRooms
-                    .Include(x => x.Room.Department)
-                    .Include(x => x.Ticket)
-                    .Where(x => x.RoomId == id)
-                    .Where(x => x.Ticket.CreatedAt == today)
-                    .OrderBy(x => x.StatusId)
-                    .ThenByDescending(x => x.CalledAt)
-                    .ToList();
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                if (databaseContext != null)
-                {
-                    databaseContext.Dispose();
-                    databaseContext = null;
-                }
-            }            
         }
 
         public int GetLastTicketNumber(DateTime date, int departmentId)
@@ -97,43 +52,7 @@ namespace Infrastructure.Repositories
         {
             TicketInRooms current = _context.TicketInRooms.FirstOrDefault(x => x.Id == ticketInRooms.Id);
             current.StatusId = ticketInRooms.StatusId;
-
-            current.CalledAt = DateTime.Now;
-
-            _context.SaveChanges();
-        }
-
-        public void CopyToNextRoom(int ticketInRooms)
-        {
-            try
-            {
-                TicketInRooms current = _context.TicketInRooms.Include(x => x.Room).FirstOrDefault(x => x.Id == ticketInRooms);
-                var currentDepartmentId = current.Room.DepartmentId;
-                var nextRoom = _context.Rooms.Where(x => x.DepartmentId == currentDepartmentId).FirstOrDefault(x => x.Id > current.RoomId);
-                if (nextRoom != null)
-                {
-                    current.RoomId = nextRoom.Id;
-                    current.CalledAt = DateTime.Now;
-                    current.StatusId = StatusEnum.Waiting;
-                    _context.TicketInRooms.Add(current);
-                    _context.SaveChanges();
-                }
-            }
-            catch (System.Exception ex)
-            {
-                throw ex;
-            }
-
-        }
-
-        public StatusEnum GetStatus(int id)
-        {
-            return _context.TicketInRooms.Find(id).StatusId;
-        }
-
-        public TicketInRooms GetTicketInRoomById(int id)
-        {
-            return _context.TicketInRooms.Include(x => x.Room).Include(x => x.Ticket).FirstOrDefault(x => x.Id == id);
+            await _context.SaveChangesAsync();
         }
     }
 }
