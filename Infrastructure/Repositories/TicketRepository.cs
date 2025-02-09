@@ -134,7 +134,10 @@ namespace Infrastructure.Repositories
 
         public TicketInRooms GetTicketInRoomById(int id)
         {
-            return _context.TicketInRooms.Include(x => x.Room).Include(x => x.Ticket).FirstOrDefault(x => x.Id == id);
+            return _context.TicketInRooms
+                .Include(x => x.Room)
+                .Include(x => x.Ticket)
+                .FirstOrDefault(x => x.Id == id);
         }
 
         public void CreateTicketInRoom(TicketInRooms ticket)

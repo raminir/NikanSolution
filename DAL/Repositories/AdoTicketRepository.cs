@@ -33,12 +33,12 @@ namespace DAL.Repositories
                     {
                         var ticketInRoom = new TicketInRooms
                         {
+                            Id = (int)reader["Id"],
                             Room = new Room
                             {
                                 Department =
                                             new Department
                                             {
-                                                Id = (int)reader["Id"],
                                                 Name = reader["DepartmanName"].ToString(),
                                             },
                                 Name = reader["RoomName"].ToString(),
@@ -196,14 +196,34 @@ namespace DAL.Repositories
         }
         StatusEnum ITicketRepository.GetStatus(int id)
         {
-            throw new NotImplementedException();
+            var statusId = new StatusEnum();
+            string query = @"
+                            select StatusId from TicketInRooms
+                            where Id = @Id";
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Id", id);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    statusId = (StatusEnum)reader.GetInt32(reader.GetOrdinal("StatusId"));
+                }
+            }
+            return statusId;
         }
         public void UpdateStatus(TicketInRooms model)
         {
+            string query = $@"UPDATE {nameof(TicketInRooms)} 
+                            SET {nameof(TicketInRooms.StatusId)} = {(int)model.StatusId} 
+                            WHERE {nameof(TicketInRooms.Id)} = {model.Id}";
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                var command = new SqlCommand($"UPDATE {nameof(TicketInRooms)} SET {nameof(TicketInRooms.StatusId)} = {model.StatusId} WHERE {nameof(TicketInRooms.Id)} = {model.Id}", connection);
+                var command = new SqlCommand(query, connection);
                 command.ExecuteNonQuery();
             }
         }
