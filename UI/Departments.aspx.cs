@@ -10,7 +10,7 @@ namespace UI
     {
         private DepartmentService departmentService;
         private TicketService _ticketService;
-        
+
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -32,7 +32,7 @@ namespace UI
         {
             Button btn = (Button)sender;
             var departmentId = int.Parse(btn.CommandArgument);
-            var ticketNumber = _ticketService.GenerateTicketAsync(departmentId);
+            var ticketNumber = _ticketService.GenerateTicket(departmentId);
             Response.Write($"<script>alert('شماره شما :{ticketNumber.ToString()}');</script>");
         }
         private void LoadDepartments()

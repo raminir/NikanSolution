@@ -83,10 +83,11 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public int GetLastTicketNumber(DateTime date, int departmentId)
+        public int GetLastTicketNumberByDepartmentIdForToday(int departmentId)
         {
+            var today = DateTime.Now.Date;
             return _context.Tickets
-                .Where(t => t.CreatedAt == date.Date)
+                .Where(t => t.CreatedAt == today)
                 .Where(t => t.TicketInRooms.Any(x => x.Room.DepartmentId == departmentId))
                 .OrderByDescending(t => t.TicketNumber)
                 .Select(t => t.TicketNumber)
@@ -134,6 +135,16 @@ namespace Infrastructure.Repositories
         public TicketInRooms GetTicketInRoomById(int id)
         {
             return _context.TicketInRooms.Include(x => x.Room).Include(x => x.Ticket).FirstOrDefault(x => x.Id == id);
+        }
+
+        public void CreateTicketInRoom(TicketInRooms ticket)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CreateTicketWithTicketInRoom(Ticket ticket)
+        {
+            CreateTicket(ticket);
         }
     }
 }

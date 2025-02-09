@@ -21,23 +21,24 @@ namespace Application
                 _departmentRepository = departmentRepository;
                 _appointmentService = appointmentService;
             }
-            public int GetNextTicketNumber(DateTime date, int departmentId)
+            public int GetNextTicketNumber(int departmentId)
             {
-                int lastNumber = _ticketRepository.GetLastTicketNumber(date, departmentId);
+                int lastNumber = _ticketRepository.GetLastTicketNumberByDepartmentIdForToday(departmentId);
                 return lastNumber + 1;
             }
 
-            public int GenerateTicketAsync(int departmentId)
+            public int GenerateTicket(int departmentId)
             {
                 var department = _departmentRepository.GetById(departmentId);
                 var firstRoomId = department.Rooms.FirstOrDefault().Id;
-                int newTicketNumber = GetNextTicketNumber(DateTime.Now.Date, departmentId);
+                int newTicketNumber = GetNextTicketNumber(departmentId);
 
                 var ticket = new Ticket
                 {
                     TicketNumber = newTicketNumber,
                     CreatedAt = DateTime.Now.Date,
                 };
+
                 ticket.TicketInRooms = new List<TicketInRooms> {
                     new TicketInRooms()
                     {
@@ -46,7 +47,8 @@ namespace Application
                         CalledAt = DateTime.Now,
                     }
                 };
-                _ticketRepository.CreateTicket(ticket);
+
+                _ticketRepository.CreateTicketWithTicketInRoom(ticket);
                 return ticket.TicketNumber;
             }
 

@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Models.Repository
 {
     public interface ITicketRepository
     {
-        Ticket CreateTicket(Ticket ticket);
-        List<TicketInRooms> GetTicketsInProgressForToday();
+        int GetLastTicketNumberByDepartmentIdForToday(int departmentId);
         List<TicketInRooms> GetAllTodayTicketByRoomId(int id);
-        int GetLastTicketNumber(DateTime date, int departmentId);
+        List<TicketInRooms> GetTicketsInProgressForToday();
+        TicketInRooms GetTicketInRoomById(int id);
         void UpdateStatus(TicketInRooms model);
+        Ticket CreateTicket(Ticket ticket);
+        void CreateTicketInRoom(TicketInRooms ticket);
         void CopyToNextRoom(int ticketId);
         StatusEnum GetStatus(int id);
-
-        TicketInRooms GetTicketInRoomById(int id);
+        void CreateTicketWithTicketInRoom(Ticket ticket);
     }
 }

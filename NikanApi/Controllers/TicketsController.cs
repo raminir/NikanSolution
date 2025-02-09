@@ -19,7 +19,7 @@ namespace NikanApi.Controllers
         // POST api/<controller>
         public int Post([FromBody] int departmentId)
         {
-            var ticketNumber = _ticketService.GenerateTicketAsync(departmentId);
+            var ticketNumber = _ticketService.GenerateTicket(departmentId);
             return ticketNumber;
 
         }
