@@ -6,7 +6,6 @@ namespace Models.Repository
     public interface ITicketRepository
     {
         Ticket CreateTicket(Ticket ticket);
-        List<TicketInRooms> GetAll();
         List<TicketInRooms> GetTodayInProgressTickets();
         List<TicketInRooms> GetAllTodayTicketByRoomId(int id);
         int GetLastTicketNumber(DateTime date, int departmentId);

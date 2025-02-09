@@ -81,8 +81,6 @@ namespace Infrastructure.Repositories
                     databaseContext = null;
                 }
             }
-
-
         }
 
         public int GetLastTicketNumber(DateTime date, int departmentId)

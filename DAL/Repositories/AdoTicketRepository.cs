@@ -26,28 +26,6 @@ namespace DAL.Repositories
             return model;
         }
 
-        public List<TicketInRooms> GetAll()
-        {
-            var ticketInRooms = new List<TicketInRooms>();
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var command = new SqlCommand($"SELECT * FROM {nameof(TicketInRooms)}", connection);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        ticketInRooms.Add(new TicketInRooms
-                        {
-                            Id = (int)reader[$"{nameof(TicketInRooms.Id)}"],
-                        });
-                    }
-                }
-            }
-            return ticketInRooms;
-        }
-
         public int GetLastTicketNumber(DateTime date)
         {
             int ticketNumber = 0;
@@ -84,7 +62,51 @@ namespace DAL.Repositories
 
         List<TicketInRooms> ITicketRepository.GetAllTodayTicketByRoomId(int id)
         {
-            throw new NotImplementedException();
+            var today = DateTime.Now.Date;
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var query = $@"
+                                    SELECT tir.Id, d.Name as DepartmanName , r.Name as RoomName  , t.TicketNumber ,t.CreatedAt , StatusId
+                                    FROM TicketInRooms tir
+                                    Inner join  Rooms r ON tir.RoomId = r.Id
+                                    Inner join  Tickets t ON tir.TicketId = t.Id
+                                    Inner join Departments d on d.Id = r.DepartmentId
+                                    WHERE tir.RoomId = {id} AND t.CreatedAt = '{today}'
+                                    ORDER BY tir.StatusId, tir.CalledAt DESC ";
+                var command = new SqlCommand(query, connection);
+                using (var reader = command.ExecuteReader())
+                {
+                    var result = new List<TicketInRooms>();
+                    while (reader.Read())
+                    {
+                        var ticketInRoom = new TicketInRooms
+                        {
+                            Room = new Room
+                            {
+                                Department =
+                                            new Department
+                                            {
+                                                Id = (int)reader["Id"],
+                                                Name = reader["DepartmanName"].ToString(),
+                                            },
+                                Name = reader["RoomName"].ToString(),
+
+
+                            },
+                            Ticket = new Ticket
+                            {
+                                CreatedAt = reader.GetDateTime(reader.GetOrdinal(nameof(Ticket.CreatedAt))),
+                                TicketNumber = (int)reader["TicketNumber"],
+                            },
+                            //StatusId = reader.GetInt32(reader.GetOrdinal(nameof(TicketInRooms.StatusId))),
+                            CalledAt = reader.GetDateTime(reader.GetOrdinal(nameof(Ticket.CreatedAt))),
+                        };
+                        result.Add(ticketInRoom);
+                    }
+                    return result;
+                }
+            }
         }
 
         int ITicketRepository.GetLastTicketNumber(DateTime date, int departmentId)

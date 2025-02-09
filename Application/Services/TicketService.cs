@@ -50,11 +50,6 @@ namespace Application
                 return ticket.TicketNumber;
             }
 
-            public IList<TicketInRooms> GetAll()
-            {
-                return _ticketRepository.GetAll();
-            }
-
             public IList<TicketInRoomDto> GetAllByRoomId(int Id)
             {
                 var tickets = _ticketRepository.GetAllTodayTicketByRoomId(Id);

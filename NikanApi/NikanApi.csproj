@@ -447,6 +447,10 @@
       <Project>{5FC693E5-6362-44A4-B93A-B576E0686187}</Project>
       <Name>Application</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{683ABB3E-9DD0-4288-9027-F08443A88899}</Project>
+      <Name>DAL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain\Models.csproj">
       <Project>{c068fd09-7fb9-43d3-a22d-08ab02113002}</Project>
       <Name>Models</Name>
