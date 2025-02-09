@@ -76,5 +76,35 @@ namespace DAL.Repositories
                 command.ExecuteNonQuery();
             }
         }
+
+        void ITicketRepository.CopyToNextRoom(int ticketId)
+        {
+            throw new NotImplementedException();
+        }
+
+        List<TicketInRooms> ITicketRepository.GetAllTodayTicketByRoomId(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        int ITicketRepository.GetLastTicketNumber(DateTime date, int departmentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        StatusEnum ITicketRepository.GetStatus(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        TicketInRooms ITicketRepository.GetTicketInRoomById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        List<TicketInRooms> ITicketRepository.GetTodayInProgressTickets()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
