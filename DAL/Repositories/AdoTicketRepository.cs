@@ -218,7 +218,8 @@ namespace DAL.Repositories
         public void UpdateStatus(TicketInRooms model)
         {
             string query = $@"UPDATE {nameof(TicketInRooms)} 
-                            SET {nameof(TicketInRooms.StatusId)} = {(int)model.StatusId} 
+                            SET {nameof(TicketInRooms.StatusId)} = {(int)model.StatusId},
+                                {nameof(TicketInRooms.CalledAt)} = '{DateTime.Now}'
                             WHERE {nameof(TicketInRooms.Id)} = {model.Id}";
             using (var connection = new SqlConnection(_connectionString))
             {
