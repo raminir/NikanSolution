@@ -38,7 +38,7 @@ namespace Infrastructure.Repositories
                 .ToList();
         }
 
-        public List<TicketInRooms> GetTodayInProgressTickets()
+        public List<TicketInRooms> GetTicketsInProgressForToday()
         {
             var today = DateTime.Now.Date;
             return _context.TicketInRooms

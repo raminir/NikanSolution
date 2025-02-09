@@ -91,15 +91,13 @@ namespace DAL.Repositories
                                                 Name = reader["DepartmanName"].ToString(),
                                             },
                                 Name = reader["RoomName"].ToString(),
-
-
                             },
                             Ticket = new Ticket
                             {
                                 CreatedAt = reader.GetDateTime(reader.GetOrdinal(nameof(Ticket.CreatedAt))),
-                                TicketNumber = (int)reader["TicketNumber"],
+                                TicketNumber = (int)reader[nameof(Ticket.TicketNumber)],
                             },
-                            //StatusId = reader.GetInt32(reader.GetOrdinal(nameof(TicketInRooms.StatusId))),
+                            StatusId = (StatusEnum)reader.GetInt32(reader.GetOrdinal("StatusId")),
                             CalledAt = reader.GetDateTime(reader.GetOrdinal(nameof(Ticket.CreatedAt))),
                         };
                         result.Add(ticketInRoom);
@@ -124,9 +122,49 @@ namespace DAL.Repositories
             throw new NotImplementedException();
         }
 
-        List<TicketInRooms> ITicketRepository.GetTodayInProgressTickets()
+        List<TicketInRooms> ITicketRepository.GetTicketsInProgressForToday()
         {
-            throw new NotImplementedException();
+            var today = DateTime.Now.Date;
+            var tickets = new List<TicketInRooms>();
+
+            string query = @"
+                            SELECT r.Name as RoomName, t.TicketNumber
+                            FROM TicketInRooms tir
+                            INNER JOIN Rooms r ON tir.RoomId = r.Id
+                            INNER JOIN Tickets t ON tir.TicketId = t.Id
+                            WHERE t.CreatedAt = @Today
+                            AND tir.StatusId = @StatusId
+                            ORDER BY tir.CalledAt DESC";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Today", today);
+                command.Parameters.AddWithValue("@StatusId", (int)StatusEnum.InProgress);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var ticketInRoom = new TicketInRooms
+                    {
+
+                        Room = new Room
+                        {
+                            Name = reader.GetString(reader.GetOrdinal("RoomName"))
+                        },
+                        Ticket = new Ticket
+                        {
+                            TicketNumber = reader.GetInt32(reader.GetOrdinal("TicketNumber")),
+                        }
+                    };
+
+                    tickets.Add(ticketInRoom);
+                }
+            }
+
+            return tickets;
         }
     }
 }

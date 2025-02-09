@@ -72,7 +72,7 @@ namespace Application
 
             public IList<TicketInRoomDto> GetTodayInProgressTickets()
             {
-                var tickets = _ticketRepository.GetTodayInProgressTickets();
+                var tickets = _ticketRepository.GetTicketsInProgressForToday();
                 var resutl = new List<TicketInRoomDto>();
 
                 tickets.ForEach(ticket =>
