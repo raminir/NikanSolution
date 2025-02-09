@@ -46,7 +46,14 @@ namespace NikanApi.Controllers
             {
                 return BadRequest("Request body is null.");
             }
-            _ticketService.UpdateStatus(id, request);
+            if (request.StatusId == Models.StatusEnum.Done)
+            {
+                _ticketService.UpdateTicketToDone(id, request);
+            }
+            else
+            {
+                _ticketService.UpdateStatus(id, request);
+            }
             return Ok();
         }
     }

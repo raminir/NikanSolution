@@ -80,9 +80,7 @@ namespace Infrastructure.Repositories
                     databaseContext.Dispose();
                     databaseContext = null;
                 }
-            }
-
-            
+            }            
         }
 
         public int GetLastTicketNumber(DateTime date, int departmentId)
