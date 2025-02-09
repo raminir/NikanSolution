@@ -72,7 +72,7 @@ namespace Application
                 return resutl;
             }
 
-            public IList<TicketInRoomDto> GetTodayInProgressTickets()
+            public List<TicketInRoomDto> GetTodayInProgressTickets()
             {
                 var tickets = _ticketRepository.GetTicketsInProgressForToday();
                 var resutl = new List<TicketInRoomDto>();
@@ -105,17 +105,13 @@ namespace Application
                     StatusId = input.StatusId,
                 };
                 _ticketRepository.UpdateStatus(model);
-                if (model.StatusId == StatusEnum.InProgress)
-                {
-                    SendModelToHub(model.Id);
-                }
+                SendModelToHub();
             }
 
-            public void SendModelToHub(int TicketInRoomId)
+            public void SendModelToHub()
             {
-                var ticketInRooms = _ticketRepository.GetTicketInRoomById(TicketInRoomId);
-                _appointmentService.CallAppointment(new TicketInRoomDto() { RoomName = ticketInRooms.Room.Name, TicketNumber = ticketInRooms.Ticket.TicketNumber });
-
+                var model = GetTodayInProgressTickets();
+                _appointmentService.CallAppointment(model);
             }
         }
     }

@@ -1,12 +1,12 @@
 ﻿using Application.Dtos;
 using Microsoft.AspNet.SignalR;
-using Models;
+using System.Collections.Generic;
 
 namespace Application.Services
 {
     public class AppointmentService
     {
-        public void CallAppointment(TicketInRoomDto model)
+        public void CallAppointment(List<TicketInRoomDto> model)
         {
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<NotificationHub>();
             hubContext.Clients.All.broadcastNewAppointment(model);

@@ -71,12 +71,19 @@
             $(function () {
                 var notificationHub = $.connection.notificationHub;
 
-                notificationHub.client.broadcastNewAppointment = function (appointment) {
-                    $('#appointments').prepend('<div class="card card-footer w-25"><h2>نوبت شماره</h2><h1>'
-                        + appointment.TicketNumber +
-                        '</h1><h2>به</h2><h1>'
-                        + appointment.RoomName +
-                        '</h1>');
+                notificationHub.client.broadcastNewAppointment = function (appointments) {
+                    $('#appointments').empty();
+
+                    appointments.forEach(function (appointment) {
+                        $('#appointments').append(
+                            '<div class="card card-footer w-25">' +
+                            '<h2>نوبت شماره</h2>' +
+                            '<h1>' + appointment.TicketNumber + '</h1>' +
+                            '<h2>به</h2>' +
+                            '<h1>' + appointment.RoomName + '</h1>' +
+                            '</div>'
+                        );
+                    });
                 };
 
                 $.connection.hub.start().done(function () {
