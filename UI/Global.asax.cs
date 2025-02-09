@@ -1,16 +1,17 @@
 ﻿using Application.QueueManagement.Application.Services;
 using Application.Services;
+using DAL.Repositories;
+using Domain.Repository;
 using Infrastructure.Repositories;
+using Microsoft.Owin;
 using Microsoft.Practices.Unity;
 using Models.Repository;
+using Owin;
 using System;
-using System.ComponentModel;
+using System.Configuration;
 using System.Web;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Microsoft.Owin;
-using Owin;
-using Domain.Repository;
 [assembly: OwinStartup(typeof(UI.Global))]
 namespace UI
 {
@@ -31,7 +32,9 @@ namespace UI
 
             // Register dependencies
             Container.RegisterType<TicketService>(new HierarchicalLifetimeManager());
-            Container.RegisterType<ITicketRepository, TicketRepository>(new HierarchicalLifetimeManager());
+            //Container.RegisterType<ITicketRepository, TicketRepository>(new HierarchicalLifetimeManager());
+            var connectionString = ConfigurationManager.ConnectionStrings["QueueManagementConnectionString"].ConnectionString;
+            Container.RegisterType<ITicketRepository, AdoTicketRepository>(new HierarchicalLifetimeManager(), new InjectionConstructor(connectionString));
             Container.RegisterType<DepartmentService>();
             Container.RegisterType<IDepartmentRepository, DepartmentRepository>(new HierarchicalLifetimeManager());
             Container.RegisterType<IRoomRepository, RoomRepository>(new HierarchicalLifetimeManager());
