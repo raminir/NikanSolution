@@ -10,7 +10,10 @@ namespace DAL.Repositories
     public class AdoTicketRepository : ITicketRepository
     {
         private readonly string _connectionString;
-
+        public AdoTicketRepository(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
         List<TicketInRooms> ITicketRepository.GetAllTodayTicketByRoomId(int id)
         {
             var today = DateTime.Now.Date;
@@ -165,12 +168,54 @@ namespace DAL.Repositories
         }
         void ITicketRepository.CopyToNextRoom(int ticketId)
         {
-            throw new NotImplementedException();
+            var query =
+                @"WITH CurrentTicket as (
+                    select  
+                        tir.Id as TicketInRoomsId,
+                        tir.RoomId as CurrentRoomId,
+                		tir.TicketId as CurrentTicketId,
+                        r.DepartmentId
+                    from 
+                        TicketInRooms tir
+                    INNER JOIN 
+                        Rooms r ON tir.RoomId = r.Id
+                    WHERE 
+                        tir.Id = @TicketInRoomsId
+                ),
+                NextRoom as (
+                    select  TOP 1
+                        r.Id as NextRoomId , ct.CurrentTicketId
+                    from 
+                        Rooms r
+                    INNER JOIN 
+                        CurrentTicket ct ON r.DepartmentId = ct.DepartmentId
+                    WHERE 
+                        r.Id > ct.CurrentRoomId
+                    ORDER BY 
+                        r.Id asc
+                )
+                INSERT INTO TicketInRooms (TicketId,RoomId, CalledAt, StatusId)
+                select  
+                	
+                    CurrentTicketId,
+                    nr.NextRoomId as RoomId,
+                    GETDATE() as CalledAt,
+                    @StatusId as StatusId
+                from 
+                    NextRoom nr;";
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@TicketInRoomsId", ticketId);
+                    command.Parameters.AddWithValue("@StatusId", (int)StatusEnum.Waiting);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
-        public AdoTicketRepository(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
+
         public void CreateTicketInRoom(TicketInRooms model)
         {
             var query = $@"INSERT INTO {nameof(Ticket.TicketInRooms)}
