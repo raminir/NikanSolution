@@ -8,38 +8,39 @@ using System.Linq;
 
 namespace Application
 {
-    namespace QueueManagement.Application.Services
+    public class TicketService
     {
-        public class TicketService
+        private readonly ITicketRepository _ticketRepository;
+        private readonly IDepartmentRepository _departmentRepository;
+        private readonly AppointmentService _appointmentService;
+        public TicketService(
+            ITicketRepository ticketRepository,
+            IDepartmentRepository departmentRepository,
+            AppointmentService appointmentService)
         {
-            private readonly ITicketRepository _ticketRepository;
-            private readonly IDepartmentRepository _departmentRepository;
-            private readonly AppointmentService _appointmentService;
-            public TicketService(ITicketRepository ticketRepository, IDepartmentRepository departmentRepository, AppointmentService appointmentService)
-            {
-                _ticketRepository = ticketRepository;
-                _departmentRepository = departmentRepository;
-                _appointmentService = appointmentService;
-            }
-            public int GetNextTicketNumber(int departmentId)
-            {
-                int lastNumber = _ticketRepository.GetLastTicketNumberByDepartmentIdForToday(departmentId);
-                return lastNumber + 1;
-            }
+            _ticketRepository = ticketRepository;
+            _departmentRepository = departmentRepository;
+            _appointmentService = appointmentService;
+        }
+        public int GetNextTicketNumber(int departmentId)
+        {
+            int lastNumber = _ticketRepository.GetLastTicketNumberByDepartmentIdForToday(departmentId);
+            return lastNumber + 1;
+        }
 
-            public int GenerateTicket(int departmentId)
+        public int GenerateTicket(int departmentId)
+        {
+            var department = _departmentRepository.GetById(departmentId);
+            var firstRoomId = department.Rooms.FirstOrDefault().Id;
+            int newTicketNumber = GetNextTicketNumber(departmentId);
+
+            var ticket = new Ticket
             {
-                var department = _departmentRepository.GetById(departmentId);
-                var firstRoomId = department.Rooms.FirstOrDefault().Id;
-                int newTicketNumber = GetNextTicketNumber(departmentId);
+                TicketNumber = newTicketNumber,
+                CreatedAt = DateTime.Now.Date,
+            };
 
-                var ticket = new Ticket
-                {
-                    TicketNumber = newTicketNumber,
-                    CreatedAt = DateTime.Now.Date,
-                };
-
-                ticket.TicketInRooms = new List<TicketInRooms> {
+            ticket.TicketInRooms = new List<TicketInRooms> {
                     new TicketInRooms()
                     {
                         RoomId = firstRoomId,
@@ -48,71 +49,71 @@ namespace Application
                     }
                 };
 
-                _ticketRepository.CreateTicketWithTicketInRoom(ticket);
-                return ticket.TicketNumber;
-            }
+            _ticketRepository.CreateTicketWithTicketInRoom(ticket);
+            return ticket.TicketNumber;
+        }
 
-            public IList<TicketInRoomDto> GetAllByRoomId(int Id)
+        public IList<TicketInRoomDto> GetAllByRoomId(int Id)
+        {
+            var tickets = _ticketRepository.GetAllTodayTicketByRoomId(Id);
+            var resutl = new List<TicketInRoomDto>();
+
+            tickets.ForEach(ticket =>
             {
-                var tickets = _ticketRepository.GetAllTodayTicketByRoomId(Id);
-                var resutl = new List<TicketInRoomDto>();
-
-                tickets.ForEach(ticket =>
+                resutl.Add(new TicketInRoomDto
                 {
-                    resutl.Add(new TicketInRoomDto
-                    {
-                        Id = ticket.Id,
-                        DepartmentName = ticket.Room.Department.Name,
-                        RoomName = ticket.Room.Name,
-                        TicketNumber = ticket.Ticket.TicketNumber,
-                        CreatedAt = ticket.Ticket.CreatedAt,
-                        StatusId = ticket.StatusId,
-                    });
+                    Id = ticket.Id,
+                    DepartmentName = ticket.Room.Department.Name,
+                    RoomName = ticket.Room.Name,
+                    TicketNumber = ticket.Ticket.TicketNumber,
+                    CreatedAt = ticket.Ticket.CreatedAt,
+                    StatusId = ticket.StatusId,
                 });
-                return resutl;
-            }
+            });
+            return resutl;
+        }
 
-            public List<TicketInRoomDto> GetTodayInProgressTickets()
+        public List<TicketInRoomDto> GetTodayInProgressTickets()
+        {
+            var tickets = _ticketRepository.GetTicketsInProgressForToday();
+            var resutl = new List<TicketInRoomDto>();
+
+            tickets.ForEach(ticket =>
             {
-                var tickets = _ticketRepository.GetTicketsInProgressForToday();
-                var resutl = new List<TicketInRoomDto>();
+                resutl.Add(new TicketInRoomDto { RoomName = ticket.Room.Name, TicketNumber = ticket.Ticket.TicketNumber });
+            });
 
-                tickets.ForEach(ticket =>
-                {
-                    resutl.Add(new TicketInRoomDto { RoomName = ticket.Room.Name, TicketNumber = ticket.Ticket.TicketNumber });
-                });
+            return resutl;
+        }
 
-                return resutl;
-            }
+        public void UpdateTicketToDone(int id, UpdateTicketStatusRequest input)
+        {
+            UpdateStatus(id, input);
+            _ticketRepository.CopyToNextRoom(id);
+        }
+        public void UpdateStatus(int id, UpdateTicketStatusRequest input)
+        {
+            var currentStatus = _ticketRepository.GetStatus(id);
 
-            public void UpdateTicketToDone(int id, UpdateTicketStatusRequest input)
+            if (currentStatus != StatusEnum.InProgress && (input.StatusId == StatusEnum.Done || input.StatusId == StatusEnum.cancel))
             {
-                UpdateStatus(id, input);
-                _ticketRepository.CopyToNextRoom(id);
+                throw new InvalidOperationException("درصورتیکه که میخواهید انجام شده یا عدم مراجعه را بزنید باید وضعیت در حالت فراخوان  باشد.");
             }
-            public void UpdateStatus(int id, UpdateTicketStatusRequest input)
+
+            var model = new TicketInRooms()
             {
-                var currentStatus = _ticketRepository.GetStatus(id);
+                Id = id,
+                StatusId = input.StatusId,
+            };
+            _ticketRepository.UpdateStatus(model);
+            SendModelToHub();
+        }
 
-                if (currentStatus != StatusEnum.InProgress && (input.StatusId == StatusEnum.Done || input.StatusId == StatusEnum.cancel))
-                {
-                    throw new InvalidOperationException("درصورتیکه که میخواهید انجام شده یا عدم مراجعه را بزنید باید وضعیت در حالت فراخوان  باشد.");
-                }
-
-                var model = new TicketInRooms()
-                {
-                    Id = id,
-                    StatusId = input.StatusId,
-                };
-                _ticketRepository.UpdateStatus(model);
-                SendModelToHub();
-            }
-
-            public void SendModelToHub()
-            {
-                var model = GetTodayInProgressTickets();
-                _appointmentService.CallAppointment(model);
-            }
+        public void SendModelToHub()
+        {
+            var model = GetTodayInProgressTickets();
+            _appointmentService.CallAppointment(model);
         }
     }
 }
+

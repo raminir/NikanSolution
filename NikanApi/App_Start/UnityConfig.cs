@@ -1,4 +1,4 @@
-using Application.QueueManagement.Application.Services;
+using Application;
 using Application.Services;
 using Infrastructure.Repositories;
 using Models.Repository;

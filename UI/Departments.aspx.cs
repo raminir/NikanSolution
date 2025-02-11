@@ -1,4 +1,4 @@
-﻿using Application.QueueManagement.Application.Services;
+﻿using Application;
 using Application.Services;
 using Microsoft.Practices.Unity;
 using System;

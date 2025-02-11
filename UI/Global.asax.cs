@@ -1,4 +1,4 @@
-﻿using Application.QueueManagement.Application.Services;
+﻿using Application;
 using Application.Services;
 using DAL.Repositories;
 using Domain.Repository;
@@ -31,10 +31,10 @@ namespace UI
             Container = new UnityContainer();
 
             // Register dependencies
-            Container.RegisterType<TicketService>(new HierarchicalLifetimeManager());
-            //Container.RegisterType<ITicketRepository, TicketRepository>(new HierarchicalLifetimeManager());
+            Container.RegisterType<ITicketRepository, TicketRepository>(new HierarchicalLifetimeManager());
             var connectionString = ConfigurationManager.ConnectionStrings["QueueManagementConnectionString"].ConnectionString;
             Container.RegisterType<ITicketRepository, AdoTicketRepository>(new HierarchicalLifetimeManager(), new InjectionConstructor(connectionString));
+            Container.RegisterType<TicketService>(new HierarchicalLifetimeManager());
             Container.RegisterType<DepartmentService>();
             Container.RegisterType<IDepartmentRepository, DepartmentRepository>(new HierarchicalLifetimeManager());
             Container.RegisterType<IRoomRepository, RoomRepository>(new HierarchicalLifetimeManager());

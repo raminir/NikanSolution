@@ -1,5 +1,5 @@
 ﻿using Application.Dtos;
-using Application.QueueManagement.Application.Services;
+using Application;
 using Microsoft.Practices.Unity;
 using Models;
 using System;
